@@ -1,0 +1,47 @@
+version: '3.2'
+
+services:
+    zoneminder:
+        image: pschmitt/zoneminder
+        environment:
+            - ZM_DB_HOST=zoneminderapp.ckjxbiofscqp.us-east-1.rds.amazonaws.com
+            - ZM_DB_PORT=3306
+            - ZM_DB_NAME=zoneminder
+            - ZM_DB_USER=zoneminderuser
+            - ZM_DB_PASS=adsis2019
+        volumes:
+            - ./config/zoneminder:/config
+            - /usr/share/zoneinfo/Asia/Jakarta:/etc/localtime
+        ports:
+            - 8080:80
+        networks:
+            - web
+
+    frontend:
+        image: nginx:stable-alpine
+        depends_on:
+            - zoneminder
+        links:
+            - zoneminder:zoneminder
+        ports:
+            - 9200:80
+            - 443:443
+        networks:
+            - web
+
+    proxy:
+        image: dockercloud/haproxy
+        depends_on:
+            - zoneminder
+        environment:
+            - BALANCE=leastconn
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        ports:
+            - 9092:80
+        networks:
+            - web
+
+networks:
+    web:
+        driver: overlay
