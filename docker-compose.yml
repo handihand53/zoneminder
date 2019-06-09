@@ -3,12 +3,7 @@ version: '3.2'
 services:
     zoneminder:
         image: pschmitt/zoneminder
-        environment:
-            - ZM_DB_HOST=zoneminderapp.ckjxbiofscqp.us-east-1.rds.amazonaws.com
-            - ZM_DB_PORT=3306
-            - ZM_DB_NAME=zoneminder
-            - ZM_DB_USER=zoneminderuser
-            - ZM_DB_PASS=adsis2019
+        env_file: environment.env
         volumes:
             - ./config/zoneminder:/config
             - /usr/share/zoneinfo/Asia/Jakarta:/etc/localtime
