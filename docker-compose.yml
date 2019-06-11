@@ -4,6 +4,7 @@ services:
     zoneminder:
         image: pschmitt/zoneminder
         env_file: environment.env
+        restart: always
         volumes:
             - ./config/zoneminder:/config
             - /usr/share/zoneinfo/Asia/Jakarta:/etc/localtime
@@ -26,14 +27,13 @@ services:
 
     proxy:
         image: dockercloud/haproxy
+        restart: always
         depends_on:
             - zoneminder
         environment:
             - BALANCE=leastconn
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-        ports:
-            - 9092:80
         networks:
             - web
 
