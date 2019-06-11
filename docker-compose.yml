@@ -27,7 +27,6 @@ services:
 
     proxy:
         image: dockercloud/haproxy
-        restart: always
         depends_on:
             - zoneminder
         environment:
@@ -36,6 +35,8 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
             - web
+        ports:
+            - 9092:80
 
 networks:
     web:
