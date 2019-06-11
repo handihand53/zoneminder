@@ -4,7 +4,7 @@ services:
     zoneminder:
         image: pschmitt/zoneminder
         env_file: environment.env
-        restart: always
+        restart: on-failure
         volumes:
             - ./config/zoneminder:/config
             - /usr/share/zoneinfo/Asia/Jakarta:/etc/localtime
